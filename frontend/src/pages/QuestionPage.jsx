@@ -42,12 +42,15 @@ const QuestionPage = () => {
     setTestResult(null);
 
     try {
-      const response = await axios.post("http://localhost:8000/execute", {
-        language,
-        code,
-        input: question.input,
-        output: question.output,
-      });
+      const response = await axios.post(
+        "https://oa-practice-platform-uj4o.vercel.app/execute",
+        {
+          language,
+          code,
+          input: question.input,
+          output: question.output,
+        }
+      );
 
       setOutput(response.data.output);
       setLoading(false);
@@ -70,7 +73,7 @@ const QuestionPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/run-hidden-tests",
+        "https://oa-practice-platform-uj4o.vercel.app/run-hidden-tests",
         {
           language,
           code,
