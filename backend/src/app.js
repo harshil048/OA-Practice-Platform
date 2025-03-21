@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://oa-practice-platform.vercel.app",
+    origin: "https://oa-practice-platform.vercel.app/",
     credentials: true,
   })
 );
