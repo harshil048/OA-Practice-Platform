@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/slices/authSlice";
+import { loginUser, refreshToken } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -9,6 +9,10 @@ const Login = () => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  const user =
+    useSelector((state) => state.auth.user) ||
+    JSON.parse(localStorage.getItem("user"));
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,6 +23,12 @@ const Login = () => {
       navigate("/dashboard");
     }
   };
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(refreshToken());
+    }
+  }, [dispatch, user]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

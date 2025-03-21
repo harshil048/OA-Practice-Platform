@@ -102,4 +102,54 @@ const logout = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { register, login, logout };
+// @desc      Refresh access token
+// @route     POST /api/v1/users/refresh-token
+// @access    Public
+const refreshToken = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  const user = await User.findOne({
+    refreshToken,
+  });
+
+  if (!user) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  const accessToken = user.generateAccessToken();
+  const newRefreshToken = user.generateRefreshToken();
+  user.refreshToken = newRefreshToken;
+  await user.save();
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  const option = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  };
+
+  return res
+    .status(200)
+    .cookie("refreshToken", newRefreshToken, option)
+    .cookie("accessToken", accessToken, option)
+    .json(
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+          accessToken,
+          refreshToken: newRefreshToken,
+        },
+        "Access token refreshed successfully"
+      )
+    );
+});
+
+export { register, login, logout, refreshToken };
