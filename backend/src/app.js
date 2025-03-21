@@ -9,10 +9,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://oa-practice-platform.vercel.app/",
-    credentials: true,
+    origin: ["https://oa-practice-platform.vercel.app"], // Allow frontend domain
+    credentials: true, // Allow cookies & auth headers
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
+app.options("*", cors());
 app.use(express.json());
 app.use(cookieParser());
 
