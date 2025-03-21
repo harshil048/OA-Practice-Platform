@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/v1/oa-questions";
+const API_URL = "https://oa-practice-platform-uj4o.vercel.app/v1/oa-questions";
 
 // Async Thunks
 export const fetchOAQuestions = createAsyncThunk(
